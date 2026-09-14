@@ -39,6 +39,13 @@ function function_body_lines!(flines, ast::Expr, coverage::Vector{CovCount}, lin
         if length(args) >= 2 && isevaldef(args[1]) && isevaldef(args[2])
             args = args[3:end]
         end
+    elseif ast.head == :macrocall
+        # Skip where the macro was called: Julia emits no coverage counter for that line,
+        # so marking it as runnable code would create a line that can never be hit.
+        args = ast.args
+        if length(args) >= 2 && args[2] isa LineNumberNode
+            args = [args[1]; args[3:end]]
+        end
     else
         args = ast.args
     end

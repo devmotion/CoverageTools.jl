@@ -26,3 +26,10 @@ end
 # This line should have no code
 baremodule TestBareModule
 end
+
+# This line should have no code
+function f9(x)
+    return sum(
+        @view(x[1:1]),
+    )
+end
